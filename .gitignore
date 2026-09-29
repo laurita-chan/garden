@@ -24,3 +24,7 @@ content/.stignore
 content/.stfolder/
 content/.stversions/
 **/*.sync-conflict-*
+
+# Canvas y Bases de Obsidian: siempre privados
+content/**/*.canvas
+content/**/*.base

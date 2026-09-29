@@ -1,3 +1,78 @@
 @use "./variables.scss" as *;
 
 // put your custom CSS here!
+
+// ── Cabecera ilustrada en la página de inicio (cielo 봄날, cosmos y gato) ──
+// El script de Head.tsx inserta los dos SVG (día y noche) como <object> para que
+// sus animaciones y efectos al pasar el ratón funcionen.
+.cabecera {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 1;
+  min-height: 160px;
+  margin: 0 0 1.5rem;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--lightgray);
+
+  object {
+    position: absolute;
+    top: 0;
+    left: 66%; // 66%: en móvil se ven el gato y la luna
+    transform: translateX(-66%);
+    width: max(100%, 640px);
+    height: 100%;
+  }
+
+  .noche {
+    display: none;
+  }
+}
+
+:root[saved-theme="dark"] .cabecera {
+  .dia {
+    display: none;
+  }
+  .noche {
+    display: block;
+  }
+}
+
+// ── Enlaces: al pasar el ratón se tiñen de rosa y brota una flor ✿ ──
+article a.internal:not(.tag-link):not(:has(> img)) {
+  position: relative;
+  transition:
+    color 0.2s ease,
+    background-color 0.3s ease;
+
+  &::after {
+    content: "✿" / ""; // decorativa: los lectores de pantalla no la leen
+    position: absolute;
+    top: -0.75em;
+    right: -0.55em;
+    font-size: 0.75em;
+    line-height: 1;
+    color: var(--tertiary);
+    opacity: 0;
+    transform: scale(0.3) rotate(-90deg);
+    transition:
+      opacity 0.25s ease,
+      transform 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+    pointer-events: none;
+  }
+
+  &:hover {
+    background-color: var(--textHighlight);
+
+    &::after {
+      opacity: 1;
+      transform: scale(1) rotate(0);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  article a.internal::after {
+    transition: none;
+  }
+}

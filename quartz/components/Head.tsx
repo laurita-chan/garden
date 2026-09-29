@@ -43,6 +43,19 @@ export default (() => {
       <head>
         <title>{title}</title>
         <meta charSet="utf-8" />
+        {/* Día/noche según la hora local del visitante (7:00–20:00 = día).
+            Si alguien pulsa el botón ☀️/🌙, se respeta su elección durante la visita. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(!sessionStorage.getItem("theme-manual")){var h=new Date().getHours();localStorage.setItem("theme",h>=20||h<7?"dark":"light")}document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest(".darkmode"))sessionStorage.setItem("theme-manual","1")},true)}catch(e){}})();`,
+          }}
+        />
+        {/* Cabecera ilustrada y animada, solo en la página de inicio */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){function c(){if(document.body.dataset.slug!=="index")return;var h=document.querySelector(".center > .page-header");if(!h||h.querySelector(".cabecera"))return;h.insertAdjacentHTML("afterbegin",'<div class="cabecera" aria-hidden="true"><object class="dia" type="image/svg+xml" data="static/cabecera-dia.svg" tabindex="-1"></object><object class="noche" type="image/svg+xml" data="static/cabecera-noche.svg" tabindex="-1"></object></div>')}document.addEventListener("nav",c);document.addEventListener("DOMContentLoaded",c)})();`,
+          }}
+        />
         {coreStylesheet && <link rel="preload" href={coreStylesheet} as="style" />}
         {coreScript && coreScript.contentType === "external" && (
           <link rel="preload" href={coreScript.src} as="script" />

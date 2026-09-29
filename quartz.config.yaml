@@ -18,35 +18,37 @@ configuration:
     - .stfolder
     - .stversions
     - "**/*.sync-conflict-*"
+    - "**/*.canvas"
+    - "**/*.base"
   theme:
     fontOrigin: googleFonts
     cdnCaching: true
     typography:
-      title: Fraunces
-      header: Fraunces
-      body: Inter
+      title: Gowun Batang
+      header: Gowun Batang
+      body: Gowun Dodum
       code: IBM Plex Mono
     colors:
       lightMode:
-        light: "#fbfaf6"
-        lightgray: "#e6e4dc"
-        gray: "#b5b3a8"
-        darkgray: "#45473f"
-        dark: "#23261f"
-        secondary: "#3f6b4a"
-        tertiary: "#c07a52"
-        highlight: rgba(143, 159, 169, 0.15)
-        textHighlight: "#fff23688"
+        light: "#F7F2E9"
+        lightgray: "#E7DFD3"
+        gray: "#B8AEBF"
+        darkgray: "#4A4452"
+        dark: "#2C2735"
+        secondary: "#735FA0"
+        tertiary: "#A8505F"
+        highlight: rgba(126, 107, 168, 0.12)
+        textHighlight: "#F4C6CF99"
       darkMode:
-        light: "#161618"
-        lightgray: "#393639"
-        gray: "#646464"
-        darkgray: "#d4d4d4"
-        dark: "#ebebec"
-        secondary: "#8fbf97"
-        tertiary: "#e0a07a"
-        highlight: rgba(143, 159, 169, 0.15)
-        textHighlight: "#b3aa0288"
+        light: "#1B1A2B"
+        lightgray: "#2E2C42"
+        gray: "#5E5A78"
+        darkgray: "#D8D2E4"
+        dark: "#F1ECF6"
+        secondary: "#B7A6E0"
+        tertiary: "#F2B8BF"
+        highlight: rgba(183, 166, 224, 0.14)
+        textHighlight: "#7E6BA888"
 plugins:
   - source: "@quartz-community/created-modified-date"
     enabled: true
@@ -117,6 +119,13 @@ plugins:
     order: 92
   - source: "@quartz-community/quartz-fonts"
     enabled: true
+    options:
+      useThemeFonts: false
+      title: Gowun Batang
+      header: Gowun Batang
+      body: Gowun Dodum
+      interface: Gowun Dodum
+      code: IBM Plex Mono
   - source: "@quartz-themes/core"
     enabled: false # true = aspecto de Obsidian; false = usa los colores y fuentes de arriba
     options:
