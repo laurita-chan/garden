@@ -12,3 +12,15 @@ replit.nix
 .quartz/
 quartz/cli/tui/dist/
 .turbo/
+
+# Carpetas privadas del jardín: nunca se suben a GitHub (el repo es público)
+content/00 Inbox/
+content/03 Journal/
+content/04 Progreso/
+content/Plantillas/
+
+# Archivos internos de Syncthing
+content/.stignore
+content/.stfolder/
+content/.stversions/
+**/*.sync-conflict-*
