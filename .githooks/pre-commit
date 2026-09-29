@@ -1,0 +1,56 @@
+#!/bin/bash
+# Red de seguridad del jardín: el repositorio de GitHub es PÚBLICO, así que todo
+# lo que se sube se puede leer allí aunque no salga en la web. Este control frena
+# la publicación (`npx quartz sync`) si se va a subir algo de content/ que no
+# debería:
+#   · una nota .md sin `publish: true`
+#   · un archivo adjunto (imagen, PDF…) que no usa ninguna nota publicada
+
+rojo=$'\033[1;31m'; amarillo=$'\033[33m'; normal=$'\033[0m'
+
+es_publica() { # $1 = ruta; lee la versión preparada para subir
+  git show ":$1" 2>/dev/null | awk '
+    NR == 1 && $0 !~ /^---[[:space:]]*$/ { exit }
+    NR > 1 && /^---[[:space:]]*$/ { exit }
+    /^publish:[[:space:]]*("true"|'"'"'true'"'"'|true)[[:space:]]*$/ { ok = 1 }
+    END { exit !ok }'
+}
+
+# Texto de todas las notas publicadas (subidas o a punto de subirse),
+# para comprobar que cada adjunto se usa en alguna.
+texto_publicado=""
+while IFS= read -r -d '' nota; do
+  es_publica "$nota" && texto_publicado+=$(git show ":$nota")$'\n'
+done < <(git ls-files -z --cached -- 'content/*.md')
+
+problemas=()
+while IFS= read -r -d '' f; do
+  case "$f" in
+    *.md)
+      es_publica "$f" || problemas+=("📝 $f  →  no tiene «publish: true»")
+      ;;
+    *)
+      nombre=${f##*/}
+      if [[ "$texto_publicado" != *"$nombre"* && "$texto_publicado" != *"${nombre// /%20}"* ]]; then
+        problemas+=("📎 $f  →  ninguna nota publicada lo usa")
+      fi
+      ;;
+  esac
+done < <(git diff --cached --name-only -z --diff-filter=ACMR -- content)
+
+[ ${#problemas[@]} -eq 0 ] && exit 0
+
+echo
+echo "${rojo}🛑 PUBLICACIÓN FRENADA: no se ha subido nada.${normal}"
+echo
+echo "Estos archivos se iban a subir a GitHub, donde cualquiera podría leerlos:"
+for p in "${problemas[@]}"; do echo "   $p"; done
+echo
+echo "Qué puedes hacer:"
+echo "   · Si es público: añade «publish: true» a la nota (o usa el adjunto en una nota publicada)."
+echo "   · Si es privado o un borrador: muévelo a «00 Inbox»."
+echo "   Después vuelve a publicar con: npx quartz sync"
+echo
+echo "${amarillo}Aunque a continuación aparezca «Done!», no se ha publicado ningún cambio.${normal}"
+echo
+exit 1
